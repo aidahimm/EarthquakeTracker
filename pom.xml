@@ -10,6 +10,12 @@
     <version>1.0.0-SNAPSHOT</version>
     <modules>
         <module>RegionalServer</module>
+      <module>ejb-interface-qukae</module>
+      <module>ejb-implemntion</module>
+
+      <module>client-webapp</module>
+        <module>client-console</module>
+        <module>webapp-test</module>
     </modules>
 
     <name>Earthquake</name>

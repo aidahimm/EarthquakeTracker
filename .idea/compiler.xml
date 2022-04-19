@@ -6,8 +6,18 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="ejb-interface-qukae" />
+        <module name="ejb-interfaces" />
+        <module name="webapp-test" />
+        <module name="client-webapp" />
+        <module name="client-console" />
         <module name="RegionalServer" />
+        <module name="ejb-implemntion" />
+        <module name="ejb-imp" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="cleint-webapp" target="1.7" />
+    </bytecodeTargetLevel>
   </component>
 </project>
