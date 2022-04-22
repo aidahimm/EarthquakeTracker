@@ -10,12 +10,11 @@
     <version>1.0.0-SNAPSHOT</version>
     <modules>
         <module>RegionalServer</module>
-      <module>ejb-interface-qukae</module>
-      <module>ejb-implemntion</module>
-
-      <module>client-webapp</module>
-        <module>client-console</module>
+        <module>ejb-interfaces-quakes</module>
+        <module>ejb-implementation</module>
         <module>webapp-test</module>
+      <module>producer-interfaces</module>
+        <module>producer-ejbs</module>
     </modules>
 
     <name>Earthquake</name>
@@ -24,8 +23,8 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <maven.compiler.source>1.7</maven.compiler.source>
-    <maven.compiler.target>1.7</maven.compiler.target>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
   </properties>
 
   <dependencies>
@@ -34,11 +33,6 @@
       <artifactId>junit</artifactId>
       <version>4.11</version>
       <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>joda-time</groupId>
-      <artifactId>joda-time</artifactId>
-      <version>2.10</version>
     </dependency>
   </dependencies>
 

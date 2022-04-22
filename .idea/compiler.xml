@@ -7,17 +7,20 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="ejb-interface-qukae" />
-        <module name="ejb-interfaces" />
+        <module name="ejb-implementation" />
         <module name="webapp-test" />
-        <module name="client-webapp" />
-        <module name="client-console" />
+        <module name="producer-ejbs" />
+        <module name="producer-interfaces" />
         <module name="RegionalServer" />
         <module name="ejb-implemntion" />
-        <module name="ejb-imp" />
+        <module name="ejb-interfaces-quakes" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="cleint-webapp" target="1.7" />
+      <module name="client-console" target="1.7" />
+      <module name="client-webapp" target="1.7" />
+      <module name="producer-ejb" target="1.7" />
     </bytecodeTargetLevel>
   </component>
 </project>

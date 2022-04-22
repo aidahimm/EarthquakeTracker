@@ -1,0 +1,10 @@
+<component name="ArtifactManager">
+  <artifact type="exploded-ejb" name="ejb-impl">
+    <output-path>$PROJECT_DIR$/out/artifacts/ejb_impl</output-path>
+    <root id="root">
+      <element id="module-output" name="ejb-implementation" />
+      <element id="module-output" name="ejb-interfaces-quakes" />
+      <element id="jpa-descriptors" facet="ejb-implementation/jpa/JPA" />
+    </root>
+  </artifact>
+</component>

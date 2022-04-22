@@ -19,17 +19,22 @@
 
 <table>
 
-        <% for(EarthquakeDTO dto:list) {%>
-    <tr>
-        <td><%=dto.getMagnitude()%></td>
-        <td><%=dto.getLatitude()%></td>
-        <td><%=dto.getLongitude()%></td>
-        <td><%=dto.getDepth()%></td>
+<%--        <% for(EarthquakeDTO dto:list) {%>--%>
+<%--            <tr>--%>
+<%--                <td><%=dto.getMagnitude()%></td>--%>
+<%--                <td><%=dto.getLatitude()%></td>--%>
+<%--                <td><%=dto.getLongitude()%></td>--%>
+<%--                <td><%=dto.getDepth()%></td>--%>
+<%--        &lt;%&ndash;        <td><%=dto.getD()%></td>&ndash;%&gt;--%>
 
-    </tr>
-        <% }%>
+<%--            </tr>--%>
+<%--        <% }%>--%>
 
-
+        <% if (list !=null){ %>
+            <%= list.size()%>
+        <%}else{%>
+            <%= request.getAttribute("isnull")%>
+        <%}%>
 </table>
 </body>
 </html>
