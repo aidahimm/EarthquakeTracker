@@ -16,6 +16,7 @@ public class earthquakeConsumerBean implements MessageListener {
 
     @Override
     public void onMessage(Message msg) {
+        System.out.println("On   Message event");
         if (msg instanceof TextMessage) {
             try {
                 String text = ((TextMessage) msg).getText();
@@ -23,8 +24,8 @@ public class earthquakeConsumerBean implements MessageListener {
                 String bar = "++++++++++++++++++++++++++++++++++++++++++++";
                 outMsg = "\n" +bar +"\n" + outMsg + "\n" + bar +"\n";
 
-                Console con = System.console();
-                con.printf(outMsg);
+//                Console con = System.console();
+                System.out.println(outMsg);
 
             } catch (final JMSException e) {
                 throw new RuntimeException(e);

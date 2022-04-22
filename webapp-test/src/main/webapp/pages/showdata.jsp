@@ -10,6 +10,7 @@
 <html>
 <head>
     <title>Hi ...</title>
+    <script src="${pageContext.request.contextPath}clientSocket.js"></script>
 </head>
 <%
     List<EarthquakeDTO> list= (List<EarthquakeDTO>) request.getAttribute("earthquakesList");
