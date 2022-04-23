@@ -8,8 +8,10 @@
         <outputRelativeToContentRoot value="true" />
         <module name="ejb-interface-qukae" />
         <module name="ejb-implementation" />
+        <module name="ejb-data-querying-interfaces" />
         <module name="webapp-test" />
         <module name="producer-ejbs" />
+        <module name="ejb-data-querying" />
         <module name="producer-interfaces" />
         <module name="RegionalServer" />
         <module name="ejb-implemntion" />

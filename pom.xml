@@ -15,6 +15,8 @@
         <module>webapp-test</module>
       <module>producer-interfaces</module>
         <module>producer-ejbs</module>
+        <module>ejb-data-querying</module>
+      <module>ejb-data-querying-interfaces</module>
     </modules>
 
     <name>Earthquake</name>

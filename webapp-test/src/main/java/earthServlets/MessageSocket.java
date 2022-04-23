@@ -9,14 +9,15 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-@ServerEndpoint("/MessageSocket")
+@ServerEndpoint("/MessageSocket1")
 
 public class MessageSocket {
 
-    List <Session> socketSessions = Collections.synchronizedList(new ArrayList<Session>());
+    static List <Session> socketSessions = Collections.synchronizedList(new ArrayList<Session>());
 
     @OnOpen
-    public void open (Session session){
+    public void open (Session session) throws IOException {
+        session.getBasicRemote().sendText("HEllo");
         socketSessions.add(session);
     }
 
@@ -25,7 +26,7 @@ public class MessageSocket {
         socketSessions.remove(session);
     }
 
-    public void broadcast (String message) throws IOException {
+    public static void broadcast (String message) throws IOException {
         for (Session session: socketSessions){
             session.getBasicRemote().sendText(message);
         }

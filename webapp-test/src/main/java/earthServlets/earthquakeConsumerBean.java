@@ -8,6 +8,7 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import java.io.Console;
+import java.io.IOException;
 import java.util.Properties;
 
 
@@ -26,8 +27,8 @@ public class earthquakeConsumerBean implements MessageListener {
 
 //                Console con = System.console();
                 System.out.println(outMsg);
-
-            } catch (final JMSException e) {
+                MessageSocket.broadcast(text);
+            } catch (final JMSException | IOException e) {
                 throw new RuntimeException(e);
             }
         }

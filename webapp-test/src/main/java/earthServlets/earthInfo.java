@@ -1,5 +1,6 @@
 package earthServlets;
 
+import it.unipi.dstm.DataServersInterface;
 import it.unipi.dstm.EarthquakeDTO;
 import it.unipi.dstm.EarthquakeInterface;
 
@@ -25,24 +26,6 @@ public class earthInfo extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-//        String id="java:global/earthquak_ejb/EarthquakeRemoteEJB!"+ EarthquakeInterface.class.getName();
-//
-//        Properties props=new Properties();
-//
-//        InitialContext ic= null;
-//
-//        try {
-//            ic = new InitialContext(props);
-//        } catch (NamingException e) {
-//            e.printStackTrace();
-//        }
-//
-//        EarthquakeInterface earthquakeInterface= null;
-//        try {
-//            earthquakeInterface = (EarthquakeInterface) ic.lookup(id);
-//        } catch (NamingException e) {
-//            e.printStackTrace();
-//        }
         try {
             initializeConnection();
         } catch (JMSException e) {
@@ -51,6 +34,9 @@ public class earthInfo extends HttpServlet {
             e.printStackTrace();
         }
         List<EarthquakeDTO> earthquakeDTOList =null;
+        List<EarthquakeDTO> earthquakeAll =null;
+        String id="java:global/ejb_data_querying/DataServersRemoteEJB!"+ DataServersInterface.class.getName();
+
         try {
             earthquakeDTOList= earthquakeInterface.listEarthquakes();
             request.setAttribute("earthquakesList",earthquakeDTOList);
@@ -60,7 +46,48 @@ public class earthInfo extends HttpServlet {
             e.printStackTrace();
         }
 
+        String host="localhost";// if you run your client and server sample on same machine
+        String port ="3700";//default
+// to obtain port use asadmin get "configs.config.server-config.iiop-service.iiop-listener.orb-listener-1.*"
+        Properties prop = new Properties();
+        prop.put("org.omg.CORBA.ORBInitialHost",host);
+        prop.put("org.omg.CORBA.ORBInitialPort",port);
+        InitialContext context = null;
+        DataServersInterface dataServersInterface  = null;
 
+        try {
+            context = new InitialContext(prop);
+            dataServersInterface = (DataServersInterface) context.lookup(id);
+        } catch (NamingException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            earthquakeDTOList= earthquakeInterface.listEarthquakes();
+            request.setAttribute("earthquakesList",earthquakeDTOList);
+            System.out.println(earthquakeDTOList.get(4).getDate());
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        if (dataServersInterface!=null) {
+            System.out.println("Data server Interface NOT NULL");
+        }else{
+            System.out.println("Data server Interface IS NULL");
+        }
+
+
+
+        try {
+            earthquakeAll = dataServersInterface.collectServersData();
+            request.setAttribute("earthquakesAll",earthquakeAll);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
 
         String resourceURL="/pages/showdata.jsp";
         RequestDispatcher requestDispatcher=request.getRequestDispatcher(resourceURL);

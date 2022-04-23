@@ -38,7 +38,7 @@ public class EarthquakeRemoteEJB  implements EarthquakeInterface {
             sqlStringBuilder.append("  e.longitude,  ");
             sqlStringBuilder.append("  e.depth,  ");
             sqlStringBuilder.append("  e.date  ");
-            sqlStringBuilder.append(" from regional1.earthquakedata e ");
+            sqlStringBuilder.append(" from earthquakedata e ");
             pstm=connection.prepareStatement(sqlStringBuilder.toString());
             rs=pstm.executeQuery();
             while (rs.next())
@@ -49,7 +49,7 @@ public class EarthquakeRemoteEJB  implements EarthquakeInterface {
                 earthquakeDTO.setLongitude(rs.getDouble(3));
                 earthquakeDTO.setDepth(rs.getDouble(4));
 //                earthquakeDTO.setD(rs.getDouble(4));
-//                earthquakeDTO.setDate(new Date(rs.getTimestamp(5).getTime()));
+                earthquakeDTO.setDate(new Date(rs.getTimestamp(5).getTime()));
                 earthquakeDTOS.add(earthquakeDTO);
 
             }
