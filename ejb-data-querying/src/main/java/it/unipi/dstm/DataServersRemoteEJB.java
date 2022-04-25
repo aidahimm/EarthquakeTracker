@@ -9,7 +9,7 @@ import java.util.List;
 public class DataServersRemoteEJB implements DataServersInterface {
     List<EarthquakeDTO> list1=new ArrayList<>();
     @Override
-    public List<EarthquakeDTO> collectServersData(java.util.Date startDate,java.util.Date endDate) {
+    public List<EarthquakeDTO> collectServersData(java.sql.Date startDate,java.sql.Date endDate) {
         try {
             list1 = dataCollection("localhost", "regional1",startDate,endDate);
         } catch (ClassNotFoundException e) {
@@ -35,17 +35,17 @@ public class DataServersRemoteEJB implements DataServersInterface {
         return list1;
     }
 
-    public List<EarthquakeDTO> dataCollection (String IP, String dbName,java.util.Date startDate, java.util.Date endDate) throws ClassNotFoundException, SQLException {
+    public List<EarthquakeDTO> dataCollection (String IP, String dbName,java.sql.Date startDate, java.sql.Date endDate) throws ClassNotFoundException, SQLException {
         String url = "jdbc:mysql://"+IP+":3306/"+dbName+"?autoReconnect=true&useSSL=false";
         String user = "root";
-        String password = "admin";
+        String password = "annamarcia";
         Class.forName("com.mysql.jdbc.Driver");
         Connection conn = DriverManager.getConnection(url, user, password);
         ResultSet rs = null;
         List<EarthquakeDTO> earthquakeDTOS=new ArrayList<>();
 
         PreparedStatement pstm = null;
-        List<java.util.Date> params = new ArrayList<>();
+        List<java.sql.Date> params = new ArrayList<>();
 
         try{
 
@@ -74,8 +74,9 @@ public class DataServersRemoteEJB implements DataServersInterface {
 
 
             pstm = conn.prepareStatement(sqlStringBuilder.toString());
-            for (int i = 1; i <= params.size(); i++) {
-                pstm.setDate(i, new Date(params.get(i).getTime()));
+            for (int i = 0; i < params.size(); i++) {
+                int k=i;
+                pstm.setDate(k+1, params.get(i));
             }
 
             rs = pstm.executeQuery();

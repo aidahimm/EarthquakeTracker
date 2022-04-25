@@ -13,8 +13,8 @@ public class App
 {
     public static void main( String[] args )
     {
-
-        RSDataCollection rs=new RSDataCollection("server@localhost","region","servermailbox");
+        String region = "region1";
+        RSDataCollection rs=new RSDataCollection("server@localhost",region,"servermailbox");
         try {
             rs.receiveData();
         } catch (IOException e) {

@@ -1,7 +1,7 @@
 package it.unipi.dstm;
 
 import javax.ejb.Remote;
-import java.util.Date;
+import java.sql.Date;
 import java.util.List;
 
 @Remote

@@ -22,13 +22,13 @@ public class EarthquakeRemoteEJB  implements EarthquakeInterface {
     private DataSource dataSource;
 
     @Override
-    public List<EarthquakeDTO> listEarthquakes(java.util.Date startDate,java.util.Date endDate) {
+    public List<EarthquakeDTO> listEarthquakes(java.sql.Date startDate,java.sql.Date endDate) {
 
         Connection connection=null;
         ResultSet rs=null;
         PreparedStatement pstm=null;
         List<EarthquakeDTO> earthquakeDTOS=new ArrayList<>();
-        List<java.util.Date> params = new ArrayList<>();
+        List<java.sql.Date> params = new ArrayList<>();
         try {
 
             connection=dataSource.getConnection();
@@ -44,7 +44,7 @@ public class EarthquakeRemoteEJB  implements EarthquakeInterface {
             if(startDate!=null)
             {
                 sqlStringBuilder.append(" and e.date >= ? ");
-                params.add(startDate);;
+                params.add(startDate);
 
             }
             if (endDate !=null)
@@ -56,10 +56,12 @@ public class EarthquakeRemoteEJB  implements EarthquakeInterface {
 
 
             pstm=connection.prepareStatement(sqlStringBuilder.toString());
+            System.out.println("PARAMS:" + params);
+            System.out.println("PARAMS SIZE:" + params.size());
 
-
-            for (int i = 1; i <= params.size(); i++) {
-                pstm.setDate(i, new java.sql.Date(params.get(i).getTime()));
+            for (int i = 0; i < params.size(); i++) {
+                int k=i;
+                pstm.setDate(k+1, params.get(i));
             }
             System.out.println(pstm.toString());
 

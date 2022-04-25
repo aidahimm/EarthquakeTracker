@@ -88,7 +88,7 @@ public class RSDataCollection {
                             MessageProducer qprod = qs.createProducer(topic);
 
                             System.out.println("Attempting to send msg # " + magnitude);
-                            TextMessage txt = qs.createTextMessage("Alarm for earthquake with " + magnitude +" happening in location(" + latitude+" ,"+longitude+ ") at time: "+ date );
+                            TextMessage txt = qs.createTextMessage("Alarm for earthquake with " + magnitude +" happening in location(" + latitude+" ,"+longitude+ ") at time: "+ date + "from region: "+ cookie);
                             qprod.send(txt);
                             System.out.println(txt.getText());
                             //Thread.sleep(new java.util.Random().nextInt(4000));
@@ -119,7 +119,7 @@ public class RSDataCollection {
         {
             String url = "jdbc:mysql://localhost:3306/regional1?autoReconnect=true&useSSL=false";
             String user = "root";
-            String password = "admin";
+            String password = "annamarcia";
             Class.forName("com.mysql.jdbc.Driver");
             Connection conn = DriverManager.getConnection(url, user, password);
             String sql = "INSERT INTO earthquakedata (magnitude, latitude, longitude,depth,date) values (?, ?, ?, ?,?)";

@@ -14,6 +14,7 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 import java.io.IOException;
+import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -32,23 +33,18 @@ public class earthInfo extends HttpServlet {
 
 
         String region= request.getParameter("region");
-        java.util.Date startDate=null;
-        java.util.Date endDate=null;
-        try {
-            if(request.getParameter("startDate")!=null)
-            {
-                startDate = new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("startDate"));
-            }
-            if(request.getParameter("endDate")!=null) {
-                endDate = new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("endDate"));
-            }
-        } catch (ParseException e) {
-            e.printStackTrace();
+        java.sql.Date startDate=null;
+        java.sql.Date endDate=null;
+        if(request.getParameter("startDate")!=null && !request.getParameter("startDate").isEmpty()) {
+            startDate = Date.valueOf(request.getParameter("startDate"));
+            System.out.println("START Date:"+  startDate);
+        }
+        if(request.getParameter("endDate")!=null && !request.getParameter("startDate").isEmpty()) {
+            endDate = Date.valueOf(request.getParameter("endDate"));
         }
 
 
-
-            // retrieve the data from all servers
+        // retrieve the data from all servers
             if ("all".equals(region)) {
 
                 String id = "java:global/ejb_data_querying/DataServersRemoteEJB!" + DataServersInterface.class.getName();

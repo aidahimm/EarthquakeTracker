@@ -20,6 +20,8 @@
 
         ws.onmessage = function(event) {
             console.log(event.data);
+        textarea = document.getElementById("AlertBox");
+        textarea.value += event.data;
         };
     </script>
 </head>
@@ -30,6 +32,7 @@
 <body>
 <h1>Earthquakes Tracker System</h1>
 
+<label for="AlertBox"></label><textarea id="AlertBox" rows="4" cols="50"></textarea>
 
 <br>
 <form action="<%= request.getContextPath()%>/earthInfo">
