@@ -36,11 +36,19 @@ public class RSDataCollection {
         System.out.println("The server " + nodeId + " is running.");
         System.out.println("cookie: " + cookie);
         System.out.println("TmBox: " + mBox);
+
+        // send a message to the client node
+        Boolean c=otpNode.ping("client@localhost", 10000);
+        System.out.println(c.toString());
+
+        //otpMbox.send("client", "client@localhost",new OtpErlangAtom("hi"));
         for(int i=0; i<5;i++) {
             //while (true) {
             try {
 
-                OtpErlangObject message = otpMbox.receive(40000);
+                OtpErlangObject message = otpMbox.receive(10000);
+                 c=otpNode.ping("client@localhost", 10000);
+                System.out.println(c.toString());
                 System.out.println("message " + message);
                 if (message instanceof OtpErlangTuple) {
                     OtpErlangTuple erlangTuple = (OtpErlangTuple) message;
@@ -69,21 +77,24 @@ public class RSDataCollection {
                     insertData(magnitude, latitude, longitude, depth, date);
 
                     try{
-                        Context ic = new InitialContext();
-                        ConnectionFactory qcf = (ConnectionFactory)ic.lookup("jms/__defaultConnectionFactory");
-                        Queue topic = (Queue)ic.lookup("jmsmyQueue2");
-                        javax.jms.Connection qc = qcf.createConnection();
-                        Session qs = qc.createSession(false, Session.AUTO_ACKNOWLEDGE);
-                        MessageProducer qprod = qs.createProducer(topic);
-                        for(int j=0; j<5; j++){
-                            System.out.println("Attempting to send msg # "+Integer.toString(j));
-                            TextMessage txt = qs.createTextMessage("Alarm # "+Integer.toString(j));
+                        if(magnitude >2) {
+
+
+                            Context ic = new InitialContext();
+                            ConnectionFactory qcf = (ConnectionFactory) ic.lookup("jms/__defaultConnectionFactory");
+                            Queue topic = (Queue) ic.lookup("jmsmyQueue2");
+                            javax.jms.Connection qc = qcf.createConnection();
+                            Session qs = qc.createSession(false, Session.AUTO_ACKNOWLEDGE);
+                            MessageProducer qprod = qs.createProducer(topic);
+
+                            System.out.println("Attempting to send msg # " + magnitude);
+                            TextMessage txt = qs.createTextMessage("Alarm for earthquake with " + magnitude +" happening in location(" + latitude+" ,"+longitude+ ") at time: "+ date );
                             qprod.send(txt);
                             System.out.println(txt.getText());
-                            Thread.sleep(new java.util.Random().nextInt(4000));
+                            //Thread.sleep(new java.util.Random().nextInt(4000));
                         }
                     }
-                    catch(NamingException | JMSException | InterruptedException e){
+                    catch(NamingException | JMSException e){
                         System.err.println("OUTCH! PUBLISHING PROBLEMS!");
                         System.err.println(e.getMessage());
 
@@ -97,17 +108,18 @@ public class RSDataCollection {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            otpNode.closeMbox(otpMbox);
-            otpNode.close();
+
 
         }
+        otpNode.closeMbox(otpMbox);
+        otpNode.close();
 
     }
     public void insertData (double magnitude,double latitude, double longitude,double depth,DateTime date) throws ClassNotFoundException, SQLException
         {
             String url = "jdbc:mysql://localhost:3306/regional1?autoReconnect=true&useSSL=false";
             String user = "root";
-            String password = "annamarcia";
+            String password = "admin";
             Class.forName("com.mysql.jdbc.Driver");
             Connection conn = DriverManager.getConnection(url, user, password);
             String sql = "INSERT INTO earthquakedata (magnitude, latitude, longitude,depth,date) values (?, ?, ?, ?,?)";

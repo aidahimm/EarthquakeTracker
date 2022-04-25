@@ -22,14 +22,15 @@ public class EarthquakeRemoteEJB  implements EarthquakeInterface {
     private DataSource dataSource;
 
     @Override
-    public List<EarthquakeDTO> listEarthquakes() {
+    public List<EarthquakeDTO> listEarthquakes(java.util.Date startDate,java.util.Date endDate) {
 
         Connection connection=null;
         ResultSet rs=null;
         PreparedStatement pstm=null;
         List<EarthquakeDTO> earthquakeDTOS=new ArrayList<>();
+        List<java.util.Date> params = new ArrayList<>();
         try {
-            earthquakeDTOS.add(new EarthquakeDTO());
+
             connection=dataSource.getConnection();
             StringBuilder sqlStringBuilder=new StringBuilder();
             sqlStringBuilder.append("select " );
@@ -39,7 +40,29 @@ public class EarthquakeRemoteEJB  implements EarthquakeInterface {
             sqlStringBuilder.append("  e.depth,  ");
             sqlStringBuilder.append("  e.date  ");
             sqlStringBuilder.append(" from earthquakedata e ");
+            sqlStringBuilder.append("  where 1 = 1  ");
+            if(startDate!=null)
+            {
+                sqlStringBuilder.append(" and e.date >= ? ");
+                params.add(startDate);;
+
+            }
+            if (endDate !=null)
+            {
+                sqlStringBuilder.append(" and e.date <= ? ");
+                params.add(endDate);
+
+            }
+
+
             pstm=connection.prepareStatement(sqlStringBuilder.toString());
+
+
+            for (int i = 1; i <= params.size(); i++) {
+                pstm.setDate(i, new java.sql.Date(params.get(i).getTime()));
+            }
+            System.out.println(pstm.toString());
+
             rs=pstm.executeQuery();
             while (rs.next())
             {

@@ -25,41 +25,50 @@
 </head>
 <%
     List<EarthquakeDTO> list = (List<EarthquakeDTO>) request.getAttribute("earthquakesList");
-    List<EarthquakeDTO> earthquakesAll = (List<EarthquakeDTO>) request.getAttribute("earthquakesAll");
+
 %>
 <body>
-<h1>hi</h1>
+<h1>Earthquakes Tracker System</h1>
 
-<table>
 
-        <% for(EarthquakeDTO dto:list) {%>
-            <tr>
-                <td><%=dto.getMagnitude()%></td>
-                <td><%=dto.getLatitude()%></td>
-                <td><%=dto.getLongitude()%></td>
-                <td><%=dto.getDepth()%></td>
-                <td><%=dto.getDate()%></td>
+<br>
+<form action="<%= request.getContextPath()%>/earthInfo">
+    <p>Please select your region to retrieve the last updates on earthquakes data: </p>
+    <label>
+        <input type="radio" name="region" value="current" checked>
+    </label>Current Region</input>
+    <label>
+        <input type="radio" name="region" value="all">
+    </label>All Regions</input>
 
-            </tr>
-        <% }%>
+    <br>
+    <label for="start">From date:</label>
 
-<%--        <% if (list !=null){ %>--%>
-<%--            <%= list.size()%>--%>
-<%--        <%}else{%>--%>
-<%--            <%= request.getAttribute("isnull")%>--%>
-<%--        <%}%>--%>
+    <input type="date" id="start" name="startDate"
+           min="2022-01-01" max="2050-12-31">
 
-<%--        <% if (earthquakesAll !=null){ %>--%>
-<%--             <%= earthquakesAll.size()%>--%>
-<%--        <%}else{%>--%>
-<%--            <%= request.getAttribute("isnull")%>--%>
-<%--        <%}%>--%>
-</table>
 
-<table>
-    <h2>Data From All Servers</h2>
+    <label for="end">To date:</label>
 
-    <% for(EarthquakeDTO dto:earthquakesAll) {%>
+    <input type="date" id="end" name="endDate"
+           min="2022-01-01" max="2050-12-31">
+
+
+
+    <input type="submit" value="Filter"/>
+</form>
+<br>
+
+<table style="width:100%">
+    <tr>
+        <th>Magnitude</th>
+        <th>Latitude</th>
+        <th>Longitude</th>
+        <th>Depth</th>
+        <th>Date</th>
+    </tr>
+    <% if(list!=null){%>
+    <% for(EarthquakeDTO dto:list) {%>
     <tr>
         <td><%=dto.getMagnitude()%></td>
         <td><%=dto.getLatitude()%></td>
@@ -69,6 +78,10 @@
 
     </tr>
     <% }%>
+    <% }%>
 </table>
+
+
+
 </body>
 </html>

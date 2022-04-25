@@ -14,6 +14,8 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Properties;
 
@@ -26,6 +28,68 @@ public class earthInfo extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
+        List<EarthquakeDTO> earthquakeDTOList =null;
+
+
+        String region= request.getParameter("region");
+        java.util.Date startDate=null;
+        java.util.Date endDate=null;
+        try {
+            if(request.getParameter("startDate")!=null)
+            {
+                startDate = new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("startDate"));
+            }
+            if(request.getParameter("endDate")!=null) {
+                endDate = new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("endDate"));
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+
+
+            // retrieve the data from all servers
+            if ("all".equals(region)) {
+
+                String id = "java:global/ejb_data_querying/DataServersRemoteEJB!" + DataServersInterface.class.getName();
+
+                String host = "localhost";// if you run your client and server sample on same machine
+                String port = "3700";//default
+// to obtain port use asadmin get "configs.config.server-config.iiop-service.iiop-listener.orb-listener-1.*"
+                Properties prop = new Properties();
+                prop.put("org.omg.CORBA.ORBInitialHost", host);
+                prop.put("org.omg.CORBA.ORBInitialPort", port);
+                InitialContext context = null;
+                DataServersInterface dataServersInterface = null;
+
+                try {
+                    context = new InitialContext(prop);
+                    dataServersInterface = (DataServersInterface) context.lookup(id);
+                } catch (NamingException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    earthquakeDTOList = dataServersInterface.collectServersData(startDate
+                    ,endDate);
+                    request.setAttribute("earthquakesList", earthquakeDTOList);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+
+            } else // retrieve the data from the current server.
+            {
+                try {
+                    earthquakeDTOList = earthquakeInterface.listEarthquakes(startDate,endDate);
+                    request.setAttribute("earthquakesList", earthquakeDTOList);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+
+            }
+
+        //notification initialization
         try {
             initializeConnection();
         } catch (JMSException e) {
@@ -33,61 +97,8 @@ public class earthInfo extends HttpServlet {
         } catch (NamingException e) {
             e.printStackTrace();
         }
-        List<EarthquakeDTO> earthquakeDTOList =null;
-        List<EarthquakeDTO> earthquakeAll =null;
-        String id="java:global/ejb_data_querying/DataServersRemoteEJB!"+ DataServersInterface.class.getName();
-
-        try {
-            earthquakeDTOList= earthquakeInterface.listEarthquakes();
-            request.setAttribute("earthquakesList",earthquakeDTOList);
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-
-        String host="localhost";// if you run your client and server sample on same machine
-        String port ="3700";//default
-// to obtain port use asadmin get "configs.config.server-config.iiop-service.iiop-listener.orb-listener-1.*"
-        Properties prop = new Properties();
-        prop.put("org.omg.CORBA.ORBInitialHost",host);
-        prop.put("org.omg.CORBA.ORBInitialPort",port);
-        InitialContext context = null;
-        DataServersInterface dataServersInterface  = null;
-
-        try {
-            context = new InitialContext(prop);
-            dataServersInterface = (DataServersInterface) context.lookup(id);
-        } catch (NamingException e) {
-            e.printStackTrace();
-        }
-
-        try {
-            earthquakeDTOList= earthquakeInterface.listEarthquakes();
-            request.setAttribute("earthquakesList",earthquakeDTOList);
-            System.out.println(earthquakeDTOList.get(4).getDate());
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-
-        if (dataServersInterface!=null) {
-            System.out.println("Data server Interface NOT NULL");
-        }else{
-            System.out.println("Data server Interface IS NULL");
-        }
 
 
-
-        try {
-            earthquakeAll = dataServersInterface.collectServersData();
-            request.setAttribute("earthquakesAll",earthquakeAll);
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
 
         String resourceURL="/pages/showdata.jsp";
         RequestDispatcher requestDispatcher=request.getRequestDispatcher(resourceURL);

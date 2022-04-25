@@ -9,23 +9,23 @@ import java.util.List;
 public class DataServersRemoteEJB implements DataServersInterface {
     List<EarthquakeDTO> list1=new ArrayList<>();
     @Override
-    public List<EarthquakeDTO> collectServersData() {
+    public List<EarthquakeDTO> collectServersData(java.util.Date startDate,java.util.Date endDate) {
         try {
-            list1 = dataCollection("localhost", "regional1");
+            list1 = dataCollection("localhost", "regional1",startDate,endDate);
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         } catch (SQLException e) {
             e.printStackTrace();
         }
         try {
-            list1.addAll(dataCollection("localhost", "regional2"));
+            list1.addAll(dataCollection("localhost", "regional2",startDate,endDate));
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         } catch (SQLException e) {
             e.printStackTrace();
         }
         try {
-            list1.addAll(dataCollection("localhost", "regional3"));
+            list1.addAll(dataCollection("localhost", "regional3",startDate,endDate));
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         } catch (SQLException e) {
@@ -35,19 +35,20 @@ public class DataServersRemoteEJB implements DataServersInterface {
         return list1;
     }
 
-    public List<EarthquakeDTO> dataCollection (String IP, String dbName) throws ClassNotFoundException, SQLException {
+    public List<EarthquakeDTO> dataCollection (String IP, String dbName,java.util.Date startDate, java.util.Date endDate) throws ClassNotFoundException, SQLException {
         String url = "jdbc:mysql://"+IP+":3306/"+dbName+"?autoReconnect=true&useSSL=false";
         String user = "root";
-        String password = "annamarcia";
+        String password = "admin";
         Class.forName("com.mysql.jdbc.Driver");
         Connection conn = DriverManager.getConnection(url, user, password);
         ResultSet rs = null;
         List<EarthquakeDTO> earthquakeDTOS=new ArrayList<>();
 
         PreparedStatement pstm = null;
+        List<java.util.Date> params = new ArrayList<>();
 
         try{
-            earthquakeDTOS.add(new EarthquakeDTO());
+
             StringBuilder sqlStringBuilder=new StringBuilder();
             sqlStringBuilder.append("select " );
             sqlStringBuilder.append("  e.magnitude,  ");
@@ -56,7 +57,27 @@ public class DataServersRemoteEJB implements DataServersInterface {
             sqlStringBuilder.append("  e.depth,  ");
             sqlStringBuilder.append("  e.date  ");
             sqlStringBuilder.append(" from earthquakedata e ");
+            sqlStringBuilder.append("  where 1 = 1  ");
+            if(startDate!=null)
+            {
+                sqlStringBuilder.append(" and e.date >= ? ");
+                params.add(startDate);;
+
+            }
+            if (endDate !=null)
+            {
+                sqlStringBuilder.append(" and e.date <= ? ");
+                params.add(endDate);
+
+            }
+
+
+
             pstm = conn.prepareStatement(sqlStringBuilder.toString());
+            for (int i = 1; i <= params.size(); i++) {
+                pstm.setDate(i, new Date(params.get(i).getTime()));
+            }
+
             rs = pstm.executeQuery();
             while (rs.next()) {
                 EarthquakeDTO earthquakeDTO=new EarthquakeDTO();
