@@ -21,7 +21,7 @@
         ws.onmessage = function(event) {
             console.log(event.data);
         textarea = document.getElementById("AlertBox");
-        textarea.value += event.data;
+        textarea.value+= event.data +"\n";
         };
     </script>
 </head>
