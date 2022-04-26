@@ -13,6 +13,7 @@ public class EarthquakeDTO implements Serializable {
     private double longitude;
     private double depth;
     private Date date;
+    private String region;
 
     public double  getMagnitude() {
         return magnitude;
@@ -53,6 +54,15 @@ public class EarthquakeDTO implements Serializable {
     public void setDate(Date date) {
         this.date = date;
     }
+
+    public String getRegion() {
+        return region;
+    }
+
+    public void setRegion(String region) {
+        this.region = region;
+    }
+
 
     @Override
     public String toString() {
