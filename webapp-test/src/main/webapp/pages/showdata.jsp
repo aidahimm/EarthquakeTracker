@@ -108,7 +108,7 @@
         <th>Longitude</th>
         <th>Depth</th>
         <th>Date</th>
-        <th>Region</th>
+<%--        <th>Region</th>--%>
 
     </tr>
     <% if(list!=null){%>
@@ -119,7 +119,7 @@
         <td><%=dto.getLongitude()%></td>
         <td><%=dto.getDepth()%></td>
         <td><%=dto.getDate()%></td>
-        <td><%=dto.getRegion()%></td>
+<%--        <td><%=dto.getRegion()%></td>--%>
 
 
     </tr>

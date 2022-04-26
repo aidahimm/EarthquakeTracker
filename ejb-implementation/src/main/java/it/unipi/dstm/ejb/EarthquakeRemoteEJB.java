@@ -79,7 +79,7 @@ public class EarthquakeRemoteEJB  implements EarthquakeInterface {
                 earthquakeDTO.setDepth(rs.getDouble(4));
 //                earthquakeDTO.setD(rs.getDouble(4));
                 earthquakeDTO.setDate(new Date(rs.getTimestamp(5).getTime()));
-                earthquakeDTO.setRegion("h1");
+
                 earthquakeDTOS.add(earthquakeDTO);
 
                 System.out.println("MAGNITUDE: "+ rs.getDouble(1));
