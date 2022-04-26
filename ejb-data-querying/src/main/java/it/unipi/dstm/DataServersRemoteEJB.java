@@ -4,6 +4,7 @@ import javax.ejb.Stateless;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Stateless
 public class DataServersRemoteEJB implements DataServersInterface {
@@ -11,21 +12,21 @@ public class DataServersRemoteEJB implements DataServersInterface {
     @Override
     public List<EarthquakeDTO> collectServersData(java.sql.Date startDate,java.sql.Date endDate) {
         try {
-            list1 = dataCollection("localhost", "regional1",startDate,endDate);
+            list1 = dataCollection("localhost", "regional1",startDate,endDate,"region1");
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         } catch (SQLException e) {
             e.printStackTrace();
         }
         try {
-            list1.addAll(dataCollection("localhost", "regional2",startDate,endDate));
+            list1.addAll(dataCollection("localhost", "regional2",startDate,endDate, "region2"));
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         } catch (SQLException e) {
             e.printStackTrace();
         }
         try {
-            list1.addAll(dataCollection("localhost", "regional3",startDate,endDate));
+            list1.addAll(dataCollection("localhost", "regional3",startDate,endDate, "region3"));
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         } catch (SQLException e) {
@@ -35,7 +36,7 @@ public class DataServersRemoteEJB implements DataServersInterface {
         return list1;
     }
 
-    public List<EarthquakeDTO> dataCollection (String IP, String dbName,java.sql.Date startDate, java.sql.Date endDate) throws ClassNotFoundException, SQLException {
+    public List<EarthquakeDTO> dataCollection (String IP, String dbName,java.sql.Date startDate, java.sql.Date endDate, String region) throws ClassNotFoundException, SQLException {
         String url = "jdbc:mysql://"+IP+":3306/"+dbName+"?autoReconnect=true&useSSL=false";
         String user = "root";
         String password = "annamarcia";
@@ -58,13 +59,13 @@ public class DataServersRemoteEJB implements DataServersInterface {
             sqlStringBuilder.append("  e.date  ");
             sqlStringBuilder.append(" from earthquakedata e ");
             sqlStringBuilder.append("  where 1 = 1  ");
-            if(startDate!=null)
+            if(startDate!=null && !Objects.equals(startDate.toString(), ""))
             {
                 sqlStringBuilder.append(" and e.date >= ? ");
                 params.add(startDate);;
 
             }
-            if (endDate !=null)
+            if (endDate !=null && !Objects.equals(endDate.toString(), ""))
             {
                 sqlStringBuilder.append(" and e.date <= ? ");
                 params.add(endDate);
@@ -86,8 +87,8 @@ public class DataServersRemoteEJB implements DataServersInterface {
                 earthquakeDTO.setLatitude(rs.getDouble(2));
                 earthquakeDTO.setLongitude(rs.getDouble(3));
                 earthquakeDTO.setDepth(rs.getDouble(4));
-//                earthquakeDTO.setD(rs.getDouble(4));
                 earthquakeDTO.setDate(new Date(rs.getTimestamp(5).getTime()));
+                earthquakeDTO.setRegion(region);
                 earthquakeDTOS.add(earthquakeDTO);
             }
 

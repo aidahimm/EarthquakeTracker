@@ -30,38 +30,50 @@
 
 %>
 <body>
-<h1>Earthquakes Tracker System</h1>
+<h1>Earthquakes Tracker System for Region 1</h1>
 
 <label for="AlertBox"></label><textarea id="AlertBox" rows="4" cols="50"></textarea>
 
 <br>
 <form action="<%= request.getContextPath()%>/earthInfo">
     <p>Please select your region to retrieve the last updates on earthquakes data: </p>
-    <label>
-        <input type="radio" name="region" value="current" checked>
-    </label>Current Region</input>
-    <label>
-        <input type="radio" name="region" value="all">
-    </label>All Regions</input>
+
+    <% if (request.getAttribute("regionToDisplay").equals("allRegions")) {%>
+        <label>
+            <input type="radio" name="region" value="current">
+        </label>Current Region
+
+        <label>
+            <input type="radio" name="region" value="all" checked>
+        </label>All Regions
+    <% } else {%>
+        <label>
+            <input type="radio" name="region" value="current" checked>
+        </label>Current Region
+
+        <label>
+            <input type="radio" name="region" value="all" >
+        </label>All Regions
+    <% } %>
 
     <br>
     <label for="start">From date:</label>
 
     <input type="date" id="start" name="startDate"
-           min="2022-01-01" max="2050-12-31">
+           min="2022-01-01" max="2050-12-31"  value='<%= request.getAttribute("startDateValue") != null ? request.getAttribute("startDateValue") : "" %>'>
 
 
     <label for="end">To date:</label>
 
     <input type="date" id="end" name="endDate"
-           min="2022-01-01" max="2050-12-31">
+           min="2022-01-01" max="2050-12-31"  value='<%= request.getAttribute("endDateValue") != null ? request.getAttribute("endDateValue") : "" %>'>
 
 
 
     <input type="submit" value="Filter"/>
 </form>
 <br>
-
+<% if (request.getAttribute("regionToDisplay").equals("allRegions")) {%>
 <table style="width:100%">
     <tr>
         <th>Magnitude</th>
@@ -69,6 +81,8 @@
         <th>Longitude</th>
         <th>Depth</th>
         <th>Date</th>
+        <th>Region</th>
+
     </tr>
     <% if(list!=null){%>
     <% for(EarthquakeDTO dto:list) {%>
@@ -78,11 +92,41 @@
         <td><%=dto.getLongitude()%></td>
         <td><%=dto.getDepth()%></td>
         <td><%=dto.getDate()%></td>
+        <td><%=dto.getRegion()%></td>
+
 
     </tr>
     <% }%>
     <% }%>
 </table>
+
+<% } else {%>
+<table style="width:100%">
+    <tr>
+        <th>Magnitude</th>
+        <th>Latitude</th>
+        <th>Longitude</th>
+        <th>Depth</th>
+        <th>Date</th>
+        <th>Region</th>
+
+    </tr>
+    <% if(list!=null){%>
+    <% for(EarthquakeDTO dto:list) {%>
+    <tr>
+        <td><%=dto.getMagnitude()%></td>
+        <td><%=dto.getLatitude()%></td>
+        <td><%=dto.getLongitude()%></td>
+        <td><%=dto.getDepth()%></td>
+        <td><%=dto.getDate()%></td>
+        <td><%=dto.getRegion()%></td>
+
+
+    </tr>
+    <% }%>
+    <% }%>
+</table>
+<% } %>
 
 
 

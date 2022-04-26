@@ -35,12 +35,14 @@ public class earthInfo extends HttpServlet {
         String region= request.getParameter("region");
         java.sql.Date startDate=null;
         java.sql.Date endDate=null;
-        if(request.getParameter("startDate")!=null && !request.getParameter("startDate").isEmpty()) {
+        if(request.getParameter("startDate")!=null && !request.getParameter("startDate").trim().isEmpty()) {
             startDate = Date.valueOf(request.getParameter("startDate"));
             System.out.println("START Date:"+  startDate);
+            request.setAttribute("startDateValue", startDate);
         }
-        if(request.getParameter("endDate")!=null && !request.getParameter("startDate").isEmpty()) {
+        if(request.getParameter("endDate")!=null && !request.getParameter("endDate").isEmpty()) {
             endDate = Date.valueOf(request.getParameter("endDate"));
+            request.setAttribute("endDateValue", endDate);
         }
 
 
@@ -68,6 +70,7 @@ public class earthInfo extends HttpServlet {
                     earthquakeDTOList = dataServersInterface.collectServersData(startDate
                     ,endDate);
                     request.setAttribute("earthquakesList", earthquakeDTOList);
+                    request.setAttribute("regionToDisplay", "allRegions");
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -78,6 +81,8 @@ public class earthInfo extends HttpServlet {
                 try {
                     earthquakeDTOList = earthquakeInterface.listEarthquakes(startDate,endDate);
                     request.setAttribute("earthquakesList", earthquakeDTOList);
+                    request.setAttribute("regionToDisplay", "localRegion");
+                    System.out.println(earthquakeDTOList.get(0).toString());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
