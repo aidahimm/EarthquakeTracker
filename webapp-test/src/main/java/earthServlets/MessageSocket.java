@@ -17,7 +17,7 @@ public class MessageSocket {
 
     @OnOpen
     public void open (Session session) throws IOException {
-        session.getBasicRemote().sendText("HEllo");
+        session.getBasicRemote().sendText("This textbox shows the dangerous earthquake updates!!\n");
         socketSessions.add(session);
     }
 

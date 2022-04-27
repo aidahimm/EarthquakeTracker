@@ -119,7 +119,7 @@ public class RSDataCollection {
         {
             String url = "jdbc:mysql://localhost:3306/regional1?autoReconnect=true&useSSL=false";
             String user = "root";
-            String password = "admin";
+            String password = "annamarcia";
             Class.forName("com.mysql.jdbc.Driver");
             Connection conn = DriverManager.getConnection(url, user, password);
             String sql = "INSERT INTO earthquakedata (magnitude, latitude, longitude,depth,date) values (?, ?, ?, ?,?)";

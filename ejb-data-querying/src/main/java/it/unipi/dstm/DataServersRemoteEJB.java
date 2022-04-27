@@ -39,7 +39,7 @@ public class DataServersRemoteEJB implements DataServersInterface {
     public List<EarthquakeDTO> dataCollection (String IP, String dbName,java.sql.Date startDate, java.sql.Date endDate, String region) throws ClassNotFoundException, SQLException {
         String url = "jdbc:mysql://"+IP+":3306/"+dbName+"?autoReconnect=true&useSSL=false";
         String user = "root";
-        String password = "admin";
+        String password = "annamarcia";
         Class.forName("com.mysql.jdbc.Driver");
         Connection conn = DriverManager.getConnection(url, user, password);
         ResultSet rs = null;
