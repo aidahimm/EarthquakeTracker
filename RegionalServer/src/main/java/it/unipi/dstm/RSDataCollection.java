@@ -76,6 +76,7 @@ public class RSDataCollection {
 
                     insertData(magnitude, latitude, longitude, depth, date);
 
+
                     try{
                         if(magnitude >2) {
 
@@ -113,13 +114,14 @@ public class RSDataCollection {
         }
         otpNode.closeMbox(otpMbox);
         otpNode.close();
+//        jdbc/Regional
 
     }
     public void insertData (double magnitude,double latitude, double longitude,double depth,DateTime date) throws ClassNotFoundException, SQLException
         {
             String url = "jdbc:mysql://localhost:3306/regional1?autoReconnect=true&useSSL=false";
-            String user = "root";
-            String password = "annamarcia";
+            String user = "user1";
+            String password = "admin";
             Class.forName("com.mysql.jdbc.Driver");
             Connection conn = DriverManager.getConnection(url, user, password);
             String sql = "INSERT INTO earthquakedata (magnitude, latitude, longitude,depth,date) values (?, ?, ?, ?,?)";
