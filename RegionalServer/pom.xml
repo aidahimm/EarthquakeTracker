@@ -96,6 +96,7 @@
                             <classpathPrefix>libs/</classpathPrefix>
                             <mainClass>
                                 it.unipi.dstm.App
+
                             </mainClass>
                         </manifest>
                     </archive>
