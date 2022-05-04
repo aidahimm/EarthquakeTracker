@@ -28,7 +28,7 @@ public class RSDataCollection {
 
     }
 
-    public void receiveData() throws IOException, OtpErlangDecodeException, OtpErlangExit {
+    public void receiveData(int numOfReceives) throws IOException, OtpErlangDecodeException, OtpErlangExit {
 
         OtpNode otpNode = new OtpNode(nodeId, cookie);
 
@@ -42,13 +42,11 @@ public class RSDataCollection {
         System.out.println(c.toString());
 
         //otpMbox.send("client", "client@localhost",new OtpErlangAtom("hi"));
-        for(int i=0; i<5;i++) {
+        for(int i=0; i<numOfReceives;i++) {
             //while (true) {
             try {
 
                 OtpErlangObject message = otpMbox.receive(10000);
-                 c=otpNode.ping("client@localhost", 10000);
-                System.out.println(c.toString());
                 System.out.println("message " + message);
                 if (message instanceof OtpErlangTuple) {
                     OtpErlangTuple erlangTuple = (OtpErlangTuple) message;
@@ -74,36 +72,45 @@ public class RSDataCollection {
 
                     DateTime date = new DateTime(year.intValue(), month.intValue(), day.intValue(), hour.intValue(), minute.intValue(), second.intValue());
 
-                    insertData(magnitude, latitude, longitude, depth, date);
-
-
-                    try{
-                        if(magnitude >2) {
-
-
-                            Context ic = new InitialContext();
-                            ConnectionFactory qcf = (ConnectionFactory) ic.lookup("jms/__defaultConnectionFactory");
-                            Queue topic = (Queue) ic.lookup("jmsmyQueue2");
-                            javax.jms.Connection qc = qcf.createConnection();
-                            Session qs = qc.createSession(false, Session.AUTO_ACKNOWLEDGE);
-                            MessageProducer qprod = qs.createProducer(topic);
-
-                            System.out.println("Attempting to send msg # " + magnitude);
-                            TextMessage txt = qs.createTextMessage("Alarm for earthquake with " + magnitude +" happening in location(" + latitude+" ,"+longitude+ ") at time: "+ date + " from region: "+ cookie);
-                            qprod.send(txt);
-                            System.out.println(txt.getText());
-                            //Thread.sleep(new java.util.Random().nextInt(4000));
+                    new Thread(() -> {
+                        try {
+                            insertData(magnitude, latitude, longitude, depth, date);
+                        } catch (ClassNotFoundException e) {
+                            e.printStackTrace();
+                        } catch (SQLException e) {
+                            e.printStackTrace();
                         }
-                    }
-                    catch(NamingException | JMSException e){
-                        System.err.println("OUTCH! PUBLISHING PROBLEMS!");
-                        System.err.println(e.getMessage());
+                    }).start();
+
+
+                    if(magnitude >2) {
+
+                        new Thread(() -> {
+                            try{
+                                Context ic = new InitialContext();
+                                ConnectionFactory qcf = (ConnectionFactory) ic.lookup("jms/__defaultConnectionFactory");
+                                Queue topic = (Queue) ic.lookup("jmsmyQueue2");
+                                javax.jms.Connection qc = qcf.createConnection();
+                                Session qs = qc.createSession(false, Session.AUTO_ACKNOWLEDGE);
+                                MessageProducer qprod = qs.createProducer(topic);
+
+                                System.out.println("Attempting to send msg # " + magnitude);
+                                TextMessage txt = qs.createTextMessage("Alarm for earthquake with " + magnitude +" happening in location(" + latitude+" ,"+longitude+ ") at time: "+ date + " from region: "+ cookie);
+                                qprod.send(txt);
+                                System.out.println(txt.getText()+" sent successfully");
+                                //Thread.sleep(new java.util.Random().nextInt(4000));
+                            }
+                            catch(NamingException | JMSException e){
+                                System.err.println("OUTCH! PUBLISHING PROBLEMS!");
+                                System.err.println(e.getMessage());
+
+                            }
+
+                        }).start();
 
                     }
 
                 }
-            } catch (SQLException throwables) {
-                throwables.printStackTrace();
             } catch (OtpErlangRangeException e) {
                 e.printStackTrace();
             } catch (Exception e) {
@@ -119,7 +126,7 @@ public class RSDataCollection {
     }
     public void insertData (double magnitude,double latitude, double longitude,double depth,DateTime date) throws ClassNotFoundException, SQLException
         {
-            String url = "jdbc:mysql://localhost:3306/regional1?autoReconnect=true&useSSL=false";
+            String url = "jdbc:mysql://localhost:3306/regional"+cookie.charAt(cookie.length()-1)+"?autoReconnect=true&useSSL=false";
             String user = "user1";
             String password = "admin";
             Class.forName("com.mysql.jdbc.Driver");
