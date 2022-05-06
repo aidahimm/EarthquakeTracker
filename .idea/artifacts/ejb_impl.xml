@@ -4,7 +4,6 @@
     <root id="root">
       <element id="module-output" name="ejb-implementation" />
       <element id="module-output" name="ejb-interfaces-quakes" />
-      <element id="jpa-descriptors" facet="ejb-implementation/jpa/JPA" />
     </root>
   </artifact>
 </component>

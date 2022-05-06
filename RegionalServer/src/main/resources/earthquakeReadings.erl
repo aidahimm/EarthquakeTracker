@@ -5,7 +5,7 @@
 
 
 start()->
-  Args = [servermailbox,server101@localhost,20000],
+  Args = [servermailbox,server101@localhost,40000],
   spawn(?MODULE, periodic_readings_loop,Args ).
 
 scale(NewMax,NewMin,OldValue)->

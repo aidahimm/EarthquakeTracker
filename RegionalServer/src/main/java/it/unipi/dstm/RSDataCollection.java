@@ -42,12 +42,32 @@ public class RSDataCollection {
         System.out.println(c.toString());
 
         //otpMbox.send("client", "client@localhost",new OtpErlangAtom("hi"));
+
+        //intialzie connection with the queue
+
+        Context ic = null;MessageProducer qprod=null;
+        javax.jms.Connection qc=null;
+        Session qs=null;
+        try {
+            ic = new InitialContext();
+            ConnectionFactory qcf = (ConnectionFactory) ic.lookup("jms/__defaultConnectionFactory");
+            Queue topic = (Queue) ic.lookup("jmsmyQueue2");
+             qc = qcf.createConnection();
+             qs = qc.createSession(false, Session.AUTO_ACKNOWLEDGE);
+             qprod = qs.createProducer(topic);
+        } catch (NamingException e) {
+            e.printStackTrace();
+        } catch (JMSException e) {
+            e.printStackTrace();
+        }
+
+
         for(int i=0; i<numOfReceives;i++) {
             //while (true) {
             try {
 
-                OtpErlangObject message = otpMbox.receive(10000);
-                System.out.println("message " + message);
+                OtpErlangObject message = otpMbox.receive(30000);
+
                 if (message instanceof OtpErlangTuple) {
                     OtpErlangTuple erlangTuple = (OtpErlangTuple) message;
                     OtpErlangPid senderPID = (OtpErlangPid) erlangTuple.elementAt(1);
@@ -85,14 +105,9 @@ public class RSDataCollection {
 
                     if(magnitude >2) {
 
-                        new Thread(() -> {
+
                             try{
-                                Context ic = new InitialContext();
-                                ConnectionFactory qcf = (ConnectionFactory) ic.lookup("jms/__defaultConnectionFactory");
-                                Queue topic = (Queue) ic.lookup("jmsmyQueue2");
-                                javax.jms.Connection qc = qcf.createConnection();
-                                Session qs = qc.createSession(false, Session.AUTO_ACKNOWLEDGE);
-                                MessageProducer qprod = qs.createProducer(topic);
+
 
                                 System.out.println("Attempting to send msg # " + magnitude);
                                 TextMessage txt = qs.createTextMessage("Alarm for earthquake with " + magnitude +" happening in location(" + latitude+" ,"+longitude+ ") at time: "+ date + " from region: "+ cookie);
@@ -100,16 +115,20 @@ public class RSDataCollection {
                                 System.out.println(txt.getText()+" sent successfully");
                                 //Thread.sleep(new java.util.Random().nextInt(4000));
                             }
-                            catch(NamingException | JMSException e){
+                            catch(JMSException e){
                                 System.err.println("OUTCH! PUBLISHING PROBLEMS!");
                                 System.err.println(e.getMessage());
 
                             }
 
-                        }).start();
+
 
                     }
 
+                }
+                else
+                {
+                    System.out.println("No received message ");
                 }
             } catch (OtpErlangRangeException e) {
                 e.printStackTrace();

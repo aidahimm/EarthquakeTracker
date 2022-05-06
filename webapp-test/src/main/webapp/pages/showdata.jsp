@@ -14,15 +14,20 @@
         var ws;
         var host = document.location.host;
         var pathname = document.location.pathname;
-        const url = "ws://localhost:8080/webapp-test/MessageSocket1";
-
+        // for local
+       // const url = "ws://localhost:8080/webapp-test/MessageSocket1";
+// for remote
+        const url = "wss://" + host  + "/webapp-test/MessageSocket1";
         ws = new WebSocket(url);
 
         ws.onmessage = function(event) {
             console.log(event.data);
-        textarea = document.getElementById("AlertBox");
+        let textarea = document.getElementById("AlertBox");
         textarea.value+= event.data +"\n";
         };
+
+
+
     </script>
 </head>
 <%
@@ -30,7 +35,7 @@
 
 %>
 <body>
-<h1>Earthquakes Tracker System for Region 1</h1>
+<h1 id="titleRegion"></h1>
 
 <label for="AlertBox"></label><textarea id="AlertBox" rows="4" cols="50"></textarea>
 
@@ -131,4 +136,19 @@
 
 
 </body>
+<script type="text/javascript">
+    let  txt="Earthquakes Tracker System for ";
+    if(host==="172.18.0.66:8181" || host==="localhost:8080"){
+        txt+="Region#1"
+
+    }else if(host==="172.18.0.65:8181")
+    {
+        txt+="Region#2"
+    }
+    else if(host==="172.18.0.67:8181")
+    {
+        txt+="Region#3"
+    }
+    document.getElementById("titleRegion").innerText=txt
+</script>
 </html>

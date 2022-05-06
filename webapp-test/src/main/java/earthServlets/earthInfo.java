@@ -49,12 +49,14 @@ public class earthInfo extends HttpServlet {
         // retrieve the data from all servers
             if ("all".equals(region)) {
 
-                String id = "java:global/ejb_data_querying/DataServersRemoteEJB!" + DataServersInterface.class.getName();
+                String id = "java:global/ejb-data-querying/DataServersRemoteEJB";
 
-                String host = "localhost";// if you run your client and server sample on same machine
+//                String host = "localhost";// if you run your client and server sample on same machine
+                String host="172.18.0.64";
                 String port = "3700";//default
 // to obtain port use asadmin get "configs.config.server-config.iiop-service.iiop-listener.orb-listener-1.*"
                 Properties prop = new Properties();
+
                 prop.put("org.omg.CORBA.ORBInitialHost", host);
                 prop.put("org.omg.CORBA.ORBInitialPort", port);
                 InitialContext context = null;
@@ -67,8 +69,15 @@ public class earthInfo extends HttpServlet {
                     e.printStackTrace();
                 }
                 try {
+                    if(dataServersInterface!=null)
+                    System.out.println("interfaceFound");
+                    else
+                        System.out.println("interface not Found");
+                    System.out.println("The start Date "+ startDate);
+                    System.out.println("The start Date "+ endDate);
                     earthquakeDTOList = dataServersInterface.collectServersData(startDate
                     ,endDate);
+                    System.out.println("the length of the list" + earthquakeDTOList.size());
                     request.setAttribute("earthquakesList", earthquakeDTOList);
                     request.setAttribute("regionToDisplay", "allRegions");
                 } catch (Exception e) {

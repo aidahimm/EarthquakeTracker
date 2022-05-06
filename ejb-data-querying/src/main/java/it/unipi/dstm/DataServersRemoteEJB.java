@@ -12,21 +12,21 @@ public class DataServersRemoteEJB implements DataServersInterface {
     @Override
     public List<EarthquakeDTO> collectServersData(java.sql.Date startDate,java.sql.Date endDate) {
         try {
-            list1 = dataCollection("localhost", "regional1",startDate,endDate,"region1");
+            list1 = dataCollection("172.18.0.66", "regional1",startDate,endDate,"region1");
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         } catch (SQLException e) {
             e.printStackTrace();
         }
         try {
-            list1.addAll(dataCollection("localhost", "regional2",startDate,endDate, "region2"));
+            list1.addAll(dataCollection("172.18.0.65", "regional2",startDate,endDate, "region2"));
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         } catch (SQLException e) {
             e.printStackTrace();
         }
         try {
-            list1.addAll(dataCollection("localhost", "regional3",startDate,endDate, "region3"));
+            list1.addAll(dataCollection("172.18.0.67", "regional3",startDate,endDate, "region3"));
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         } catch (SQLException e) {
@@ -38,8 +38,8 @@ public class DataServersRemoteEJB implements DataServersInterface {
 
     public List<EarthquakeDTO> dataCollection (String IP, String dbName,java.sql.Date startDate, java.sql.Date endDate, String region) throws ClassNotFoundException, SQLException {
         String url = "jdbc:mysql://"+IP+":3306/"+dbName+"?autoReconnect=true&useSSL=false";
-        String user = "root";
-        String password = "annamarcia";
+        String user = "user1";
+        String password = "admin";
         Class.forName("com.mysql.jdbc.Driver");
         Connection conn = DriverManager.getConnection(url, user, password);
         ResultSet rs = null;
